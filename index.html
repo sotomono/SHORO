@@ -12,71 +12,88 @@
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>書路-SHORO-</h1>
-            <p>漢字の最適な書き順を探索するサイト</p>
+    <div class="layout">
 
-            <div class="how-to">
-                <div class="step">
-                    <div class="step-icon">1</div>
-                    <div class="step-label"><strong>文字を入力</strong>お好きな漢字をフォームに入力</div>
+        <!-- ===== サイドバー ===== -->
+        <aside class="sidebar">
+            <div class="site-title">
+                <h1>書路<span class="site-title-roman">SHORO</span></h1>
+                <p>最適な書き順を探索する</p>
+            </div>
+
+            <!-- Step 1: 入力 -->
+            <div class="ctrl-block">
+                <div class="step-header">
+                    <div class="step-num">1</div>
+                    <span class="step-title">文字を入力</span>
                 </div>
-                <div class="step">
-                    <div class="step-icon">2</div>
-                    <div class="step-label"><strong>読み込む</strong>ボタンを押してデータを取得</div>
-                </div>
-                <div class="step">
-                    <div class="step-icon">3</div>
-                    <div class="step-label"><strong>再生</strong>を押すとアニメーション開始</div>
+                <p class="hint">お好きな漢字を1文字入力してください</p>
+                <div class="ctrl-row">
+                    <input type="text" id="kanjiInput" maxlength="1" placeholder="字">
+                    <button id="loadKanjiBtn" class="btn primary flex1">読み込む</button>
                 </div>
             </div>
-        </header>
 
-        <section class="controls">
-
-            <div class="control-group">
-                <div class="kanji-input-wrapper">
-                    <input type="text" id="kanjiInput" maxlength="1" placeholder="漢字">
-                    <button id="loadKanjiBtn" class="btn primary">読み込む</button>
+            <!-- SVG（任意） -->
+            <div class="ctrl-block optional">
+                <div class="step-header">
+                    <div class="step-num optional-num">＋</div>
+                    <span class="step-title optional-title">SVGから読み込む（任意）</span>
                 </div>
-                <div class="divider"></div>
-                <div class="file-input-wrapper">
+                <p class="hint">独自のSVGファイルを使う場合はこちら</p>
+                <div class="ctrl-row">
                     <input type="file" id="fileInput" accept=".svg">
-                    <label for="fileInput" class="btn">SVGを選択</label>
-                    <span id="fileName">未選択</span>
+                    <label for="fileInput" class="btn full">SVGを選択</label>
+                    <span id="fileName" class="file-name">未選択</span>
                 </div>
-                <div class="spacer"></div>
-                <button id="shareBtn" class="btn">共有URLをコピー</button>
             </div>
 
-            <div class="control-group">
-                <div class="speed-control">
-                    <label for="speedRange">速度: <span id="speedValue">1.0</span>x</label>
+            <!-- Step 2: 速度 -->
+            <div class="ctrl-block">
+                <div class="step-header">
+                    <div class="step-num">2</div>
+                    <span class="step-title">速度を調整</span>
+                </div>
+                <p class="hint">アニメーションの再生速度を変えられます</p>
+                <div class="ctrl-row speed-row">
                     <input type="range" id="speedRange" min="0.1" max="3.0" step="0.1" value="1.0">
+                    <span class="speed-val"><span id="speedValue">1.0</span>x</span>
                 </div>
-                <div class="spacer"></div>
+            </div>
+
+            <!-- Step 3: 再生 -->
+            <div class="ctrl-block">
+                <div class="step-header">
+                    <div class="step-num">3</div>
+                    <span class="step-title">再生</span>
+                </div>
+                <p class="hint">読み込み後に再生ボタンが有効になります</p>
                 <div class="playback-controls">
-                    <button id="playBtn" class="btn primary" disabled>再生</button>
-                    <button id="pauseBtn" class="btn" disabled>一時停止</button>
-                    <button id="resetBtn" class="btn" disabled>最初から</button>
+                    <button id="playBtn" class="btn primary full" disabled>再生</button>
+                    <button id="pauseBtn" class="btn half" disabled>一時停止</button>
+                    <button id="resetBtn" class="btn half" disabled>最初から</button>
                 </div>
             </div>
 
-        </section>
+            <button id="shareBtn" class="btn share-btn">共有URLをコピー</button>
+        </aside>
 
-        <main class="comparison-view">
-            <div class="view-panel">
-                <h2>元の書き順</h2>
-                <div id="originalContainer" class="canvas-container"></div>
-                <div id="originalStats" class="stats"></div>
-            </div>
-            <div class="view-panel">
-                <h2>最短書き順</h2>
-                <div id="shortestContainer" class="canvas-container"></div>
-                <div id="shortestStats" class="stats"></div>
+        <!-- ===== メインコンテンツ ===== -->
+        <main class="main">
+            <div class="comparison-view">
+                <div class="view-panel">
+                    <h2>元の書き順</h2>
+                    <div id="originalContainer" class="canvas-container"></div>
+                    <div id="originalStats" class="stats"></div>
+                </div>
+                <div class="view-panel">
+                    <h2>最短書き順</h2>
+                    <div id="shortestContainer" class="canvas-container"></div>
+                    <div id="shortestStats" class="stats"></div>
+                </div>
             </div>
         </main>
+
     </div>
     <script src="script.js"></script>
 </body>
