@@ -14,16 +14,18 @@ body {
     color: var(--text-color);
     margin: 0;
     padding: 0;
-    justify-content: center;
     min-height: 100vh;
 }
 
 .container {
     width: 90%;
     max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
     text-align: center;
 }
+
+/* ========== Header ========== */
 
 header {
     margin-bottom: 20px;
@@ -37,159 +39,10 @@ h1 {
 
 p {
     color: #666;
+    margin: 0 0 16px;
 }
 
-.controls {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.file-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-.btn {
-    padding: 10px 20px;
-    border: 1px solid var(--border-color);
-    background: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s;
-}
-
-.btn:hover:not(:disabled) {
-    background: #f0f0f0;
-}
-
-.btn.primary {
-    background-color: var(--primary-btn);
-    color: white;
-    border: none;
-}
-
-.btn.primary:hover:not(:disabled) {
-    background-color: var(--primary-btn-hover);
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.playback-controls {
-    display: flex;
-    gap: 10px;
-}
-
-.comparison-view {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.speed-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: bold;
-}
-
-.speed-control input[type="range"] {
-    width: 100px;
-    cursor: pointer;
-}
-
-.view-panel {
-    flex: 1;
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    color: var(--accent-color);
-}
-
-.canvas-container {
-    width: 100%;
-    max-width:420px;
-    aspect-ratio: 1;
-    background-color: var(--canvas-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.canvas-container svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    overflow: visible;
-    /* Allow dots to be seen outside if needed, though usually contained */
-}
-
-/* Animation Styles */
-path.kanji-stroke {
-    fill: none;
-    stroke: #000;
-    stroke-width: 4;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-path.connector-stroke {
-    fill: none;
-    stroke: #ccc;
-    stroke-width: 1;
-    stroke-dasharray: 2, 2;
-    /* Updated to 2, 2 */
-}
-
-.stats {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #666;
-    height: 1.2em;
-    /* Reserve space */
-}
-
-.stats .highlight {
-    color: #e74c3c;
-    font-weight: bold;
-}
-
-.kanji-input-wrapper {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-#kanjiInput {
-    width: 80px;
-    height: 44px;
-    font-size: 2rem;
-    text-align: center;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-}
+/* ========== How-to Steps ========== */
 
 .how-to {
     display: flex;
@@ -207,7 +60,6 @@ path.connector-stroke {
     position: relative;
 }
 
-/* ステップ間の横線 */
 .step:not(:last-child)::after {
     content: '';
     position: absolute;
@@ -247,7 +99,193 @@ path.connector-stroke {
     margin-bottom: 2px;
 }
 
-/* メディアクエリの修正と整列 */
+/* ========== Controls ========== */
+
+.controls {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.control-group + .control-group {
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border-color);
+}
+
+.kanji-input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#kanjiInput {
+    width: 60px;
+    height: 44px;
+    font-size: 2rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.speed-control input[type="range"] {
+    width: 100px;
+    cursor: pointer;
+}
+
+.playback-controls {
+    display: flex;
+    gap: 10px;
+}
+
+/* ========== Buttons ========== */
+
+.btn {
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) {
+    background: #f0f0f0;
+}
+
+.btn.primary {
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+}
+
+.btn.primary:hover:not(:disabled) {
+    background-color: var(--primary-btn-hover);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ========== Comparison View ========== */
+
+.comparison-view {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.view-panel {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--accent-color);
+}
+
+.canvas-container {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1;
+    background-color: var(--canvas-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.canvas-container svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+}
+
+/* ========== Animation Styles ========== */
+
+path.kanji-stroke {
+    fill: none;
+    stroke: #000;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+path.connector-stroke {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1;
+    stroke-dasharray: 2, 2;
+}
+
+/* ========== Stats ========== */
+
+.stats {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+    height: 1.2em;
+}
+
+.stats .highlight {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* ========== Responsive ========== */
+
 @media (max-width: 900px) {
     .comparison-view {
         flex-direction: column;
@@ -255,11 +293,30 @@ path.connector-stroke {
     }
 }
 
-/* コントロールエリアの整理 */
-.controls {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+@media (max-width: 600px) {
+    .control-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .spacer {
+        display: none;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    #shareBtn {
+        width: 100%;
+    }
+
+    .playback-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .how-to {
+        gap: 8px;
+    }
 }
