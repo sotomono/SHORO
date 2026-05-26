@@ -191,9 +191,19 @@ path.connector-stroke {
     border-radius: 5px;
 }
 
-@media (max-width: 900px){
-    .comparsion-view{
+/* メディアクエリの修正と整列 */
+@media (max-width: 900px) {
+    .comparison-view {
         flex-direction: column;
         align-items: center;
     }
+}
+
+/* コントロールエリアの整理 */
+.controls {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
