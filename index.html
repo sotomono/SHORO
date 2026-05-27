@@ -599,32 +599,11 @@
             var params = new URLSearchParams(window.location.search);
             if (params.get('kanji')) {
                 document.getElementById('loopToggle').checked = true;
-                document.getElementById('bothToggle').checked = false;
-                applyDisplayMode(false);
+                var both = params.get('both') !== '0'; // デフォルトは両方表示
+                document.getElementById('bothToggle').checked = both;
+                applyDisplayMode(both);
             }
         })();
-
-        // 表示モード切替トグル
-        function applyDisplayMode(showBoth) {
-            var originalPanel = document.getElementById('originalPanel');
-            var comparisonView = document.getElementById('comparisonView');
-            if (showBoth) {
-                originalPanel.style.display = '';
-                comparisonView.style.gridTemplateColumns = '';
-            } else {
-                originalPanel.style.display = 'none';
-                comparisonView.style.gridTemplateColumns = '1fr';
-            }
-        }
-
-        document.getElementById('bothToggle').addEventListener('change', function () {
-            applyDisplayMode(this.checked);
-        });
-
-        // 共有URLで開いた場合はループ再生をONに
-        if (new URLSearchParams(window.location.search).get('kanji')) {
-            document.getElementById('loopToggle').checked = true;
-        }
 
         var hamburgerBtn = document.getElementById('hamburgerBtn');
         var sidebar = document.querySelector('.sidebar');
