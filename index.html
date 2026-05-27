@@ -513,6 +513,9 @@
                 if (!file) return;
                 fileNameEl.textContent = file.name;
                 window._svgMode = true;
+                // 漢字入力をクリアして共有ボタンを非表示
+                input.value = '';
+                document.getElementById('shareBtn').style.display = 'none';
                 showStatus('svgStatus', '読込中…', 'neutral');
 
                 var checkCount = 0;
