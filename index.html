@@ -276,6 +276,7 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
+            justify-content: center;
         }
 
         .comparison-view {
@@ -300,6 +301,7 @@
         .canvas-container {
             width: 100%;
             aspect-ratio: 1;
+            max-width: calc((100vh - 80px) * 2 / 3);
             background-color: var(--canvas-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
@@ -576,20 +578,47 @@
 
     </div>
     <script>
+        function applyDisplayMode(showBoth) {
+            var originalPanel = document.getElementById('originalPanel');
+            var comparisonView = document.getElementById('comparisonView');
+            if (showBoth) {
+                originalPanel.style.display = '';
+                comparisonView.style.gridTemplateColumns = '';
+            } else {
+                originalPanel.style.display = 'none';
+                comparisonView.style.gridTemplateColumns = '1fr';
+            }
+        }
+
+        document.getElementById('bothToggle').addEventListener('change', function () {
+            applyDisplayMode(this.checked);
+        });
+
         // 共有URLで開いた場合はループON・最短のみ表示
         (function () {
             var params = new URLSearchParams(window.location.search);
             if (params.get('kanji')) {
                 document.getElementById('loopToggle').checked = true;
                 document.getElementById('bothToggle').checked = false;
-                document.getElementById('originalPanel').style.display = 'none';
+                applyDisplayMode(false);
             }
         })();
 
         // 表示モード切替トグル
-        document.getElementById('bothToggle').addEventListener('change', function () {
+        function applyDisplayMode(showBoth) {
             var originalPanel = document.getElementById('originalPanel');
-            originalPanel.style.display = this.checked ? '' : 'none';
+            var comparisonView = document.getElementById('comparisonView');
+            if (showBoth) {
+                originalPanel.style.display = '';
+                comparisonView.style.gridTemplateColumns = '';
+            } else {
+                originalPanel.style.display = 'none';
+                comparisonView.style.gridTemplateColumns = '1fr';
+            }
+        }
+
+        document.getElementById('bothToggle').addEventListener('change', function () {
+            applyDisplayMode(this.checked);
         });
 
         // 共有URLで開いた場合はループ再生をONに
@@ -649,17 +678,19 @@
                 svgArrow.textContent = '▶';
                 document.getElementById('svgStatus').style.opacity = '0';
                 document.getElementById('shareBtn').style.display = 'none';
+                // ボタンテキストのみ変更（disabledにするとscript.jsが動かなくなるため）
                 btn.textContent = '読込中…';
-                btn.disabled = true;
 
+                // script.js の処理完了をSVG描画で検知
+                var prevSvg = (document.getElementById('originalContainer').querySelector('svg') || {}).outerHTML || '';
                 var checkCount = 0;
                 var timer = setInterval(function () {
                     checkCount++;
                     var container = document.getElementById('originalContainer');
-                    if (container && container.querySelector('svg')) {
+                    var svg = container && container.querySelector('svg');
+                    if (svg && svg.outerHTML !== prevSvg) {
                         clearInterval(timer);
                         btn.textContent = '読み込む';
-                        btn.disabled = false;
                         showStatus('loadStatus', '✓ 「' + kanji + '」を読み込みました', 'success');
                         if (!window._svgMode) {
                             document.getElementById('shareBtn').style.display = '';
@@ -667,7 +698,6 @@
                     } else if (checkCount > 40) {
                         clearInterval(timer);
                         btn.textContent = '読み込む';
-                        btn.disabled = false;
                         showStatus('loadStatus', '読み込めませんでした', 'error');
                     }
                 }, 100);
