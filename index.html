@@ -348,6 +348,16 @@
             font-weight: bold;
         }
 
+        /* ========== ハンバーガーボタン（PC非表示） ========== */
+
+        .hamburger {
+            display: none;
+        }
+
+        .overlay {
+            display: none;
+        }
+
         /* ========== Responsive ========== */
 
         @media (max-width: 768px) {
@@ -355,25 +365,79 @@
                 grid-template-columns: 1fr;
             }
 
+            /* サイドバーはオーバーレイ式に */
             .sidebar {
-                position: static;
-                height: auto;
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                z-index: 200;
+                border-right: 1px solid var(--border-color);
+                box-shadow: 4px 0 16px rgba(0,0,0,0.12);
+                transition: left 0.25s ease;
+                overflow-y: auto;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            /* 背景オーバーレイ */
+            .overlay {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.3);
+                z-index: 199;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.25s ease;
+            }
+
+            .overlay.open {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            /* ハンバーガーボタン */
+            .hamburger {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: fixed;
+                top: 14px;
+                left: 14px;
+                z-index: 300;
+                width: 40px;
+                height: 40px;
+                background: #fff;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                font-size: 18px;
+                color: var(--accent-color);
+            }
+
+            /* メインを全幅に */
+            .main {
+                padding: 60px 16px 16px;
             }
 
             .comparison-view {
                 grid-template-columns: 1fr;
-            }
-
-            .main {
-                padding: 16px;
             }
         }
     </style>
 </head>
 
 <body>
+    <!-- ハンバーガーボタン（スマホのみ表示） -->
+    <button class="hamburger" id="hamburgerBtn" aria-label="メニューを開く">☰</button>
+    <!-- 背景オーバーレイ -->
+    <div class="overlay" id="overlay"></div>
+
     <div class="layout">
 
         <!-- ===== サイドバー ===== -->
@@ -454,6 +518,20 @@
 
     </div>
     <script>
+        var hamburgerBtn = document.getElementById('hamburgerBtn');
+        var sidebar = document.querySelector('.sidebar');
+        var overlay = document.getElementById('overlay');
+
+        hamburgerBtn.addEventListener('click', function () {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        });
+
+        overlay.addEventListener('click', function () {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+        });
+
         function toggleSvg() {
             var panel = document.getElementById('svgPanel');
             var arrow = document.getElementById('svgArrow');
