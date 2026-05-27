@@ -391,7 +391,7 @@
                 </div>
                 <p class="hint">お好きな漢字を1文字入力してください</p>
                 <div class="ctrl-row">
-                    <input type="text" id="kanjiInput" maxlength="1" placeholder="字">
+                    <input type="text" id="kanjiInput" placeholder="字">
                     <button id="loadKanjiBtn" class="btn primary flex1">読み込む</button>
                 </div>
                 <span id="loadStatus" style="font-size:11px; padding-left:28px; min-height:1.4em; display:block; opacity:0;"></span>
@@ -410,6 +410,7 @@
                         <input type="file" id="fileInput" accept=".svg">
                         <label for="fileInput" class="btn" style="width:100%;">SVGを選択</label>
                         <span id="fileName" class="file-name">未選択</span>
+                        <span id="svgStatus" style="font-size:11px; min-height:1.4em; display:block; opacity:0;"></span>
                     </div>
                 </div>
             </div>
@@ -464,24 +465,26 @@
         document.addEventListener('DOMContentLoaded', function () {
             var input = document.getElementById('kanjiInput');
             var btn = document.getElementById('loadKanjiBtn');
+            var fileInput = document.getElementById('fileInput');
+            var fileNameEl = document.getElementById('fileName');
 
-            // EnterキーでIME確定しても読み込みが走らないようにする
+            // EnterキーはIME確定のみ、読み込みは走らせない
             input.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                 }
             });
 
-            // 「読み込む」ボタンにフィードバック表示を追加
+            // 「読み込む」ボタン：先頭1文字だけ採用してフィードバック表示
             btn.addEventListener('click', function () {
-                var kanji = input.value.trim();
-                if (!kanji) return;
+                var raw = input.value.trim();
+                if (!raw) return;
+                var kanji = raw.charAt(0);
+                input.value = kanji; // フィールドも1文字に絞る
 
-                // ローディング表示
                 btn.textContent = '読込中…';
                 btn.disabled = true;
 
-                // canvasにSVGが入ったら成功と判定
                 var checkCount = 0;
                 var timer = setInterval(function () {
                     checkCount++;
@@ -490,28 +493,51 @@
                         clearInterval(timer);
                         btn.textContent = '読み込む';
                         btn.disabled = false;
-                        showStatus('✓ 「' + kanji + '」を読み込みました', 'success');
+                        showStatus('loadStatus', '✓ 「' + kanji + '」を読み込みました', 'success');
                     } else if (checkCount > 40) {
                         clearInterval(timer);
                         btn.textContent = '読み込む';
                         btn.disabled = false;
-                        showStatus('読み込めませんでした', 'error');
+                        showStatus('loadStatus', '読み込めませんでした', 'error');
                     }
                 }, 100);
-            }, true); // capture: true で script.js より先に発火
+            }, true);
+
+            // SVGファイル選択時のフィードバック
+            fileInput.addEventListener('change', function () {
+                var file = fileInput.files[0];
+                if (!file) return;
+                fileNameEl.textContent = file.name;
+                showStatus('svgStatus', '読込中…', 'neutral');
+
+                var checkCount = 0;
+                var timer = setInterval(function () {
+                    checkCount++;
+                    var container = document.getElementById('originalContainer');
+                    if (container && container.querySelector('svg')) {
+                        clearInterval(timer);
+                        showStatus('svgStatus', '✓ SVGを読み込みました', 'success');
+                    } else if (checkCount > 40) {
+                        clearInterval(timer);
+                        showStatus('svgStatus', '読み込めませんでした', 'error');
+                    }
+                }, 100);
+            });
         });
 
-        function showStatus(msg, type) {
-            var el = document.getElementById('loadStatus');
+        function showStatus(id, msg, type) {
+            var el = document.getElementById(id);
             if (!el) return;
             el.textContent = msg;
-            el.style.color = type === 'success' ? '#27ae60' : '#e74c3c';
+            el.style.color = type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#999';
             el.style.opacity = '1';
             el.style.transition = 'none';
-            setTimeout(function () {
-                el.style.transition = 'opacity 1s';
-                el.style.opacity = '0';
-            }, 2500);
+            if (type !== 'neutral') {
+                setTimeout(function () {
+                    el.style.transition = 'opacity 1s';
+                    el.style.opacity = '0';
+                }, 2500);
+            }
         }
     </script>
     <script src="script.js"></script>
