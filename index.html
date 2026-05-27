@@ -464,13 +464,36 @@
                 color: var(--accent-color);
             }
 
-            /* メインを全幅に */
+            /* メインを全幅に・画面高さに収める */
             .main {
-                padding: 60px 16px 16px;
+                padding: 60px 8px 8px;
+                height: 100vh;
             }
 
             .comparison-view {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                height: 100%;
+            }
+
+            .view-panel {
+                height: 100%;
+            }
+
+            .canvas-container {
+                aspect-ratio: unset;
+                flex: 1;
+                min-height: 0;
+            }
+
+            h2 {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
+            .stats {
+                font-size: 10px;
+                margin-top: 4px;
             }
         }
     </style>
