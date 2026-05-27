@@ -17,7 +17,7 @@
             --canvas-bg: #fff;
             --primary-btn: #3498db;
             --primary-btn-hover: #2980b9;
-            --sidebar-width: 220px;
+            --sidebar-width: 260px;
             --step-color: #ebf5fb;
             --step-text-color: #2980b9;
         }
@@ -168,7 +168,7 @@
             font-weight: 700;
             color: var(--text-color);
             white-space: nowrap;
-            min-width: 36px;
+            min-width: 42px;
             text-align: right;
         }
 
@@ -197,7 +197,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 80px;
+            max-width: 100%;
         }
 
         input[type="range"] {
@@ -403,9 +403,9 @@
                     <span class="step-title optional-title">SVGから読み込む（任意）</span>
                 </div>
                 <p class="hint">独自のSVGファイルを使う場合はこちら</p>
-                <div class="ctrl-row">
+                <div class="ctrl-row" style="flex-direction: column; align-items: flex-start;">
                     <input type="file" id="fileInput" accept=".svg">
-                    <label for="fileInput" class="btn full">SVGを選択</label>
+                    <label for="fileInput" class="btn" style="width:100%;">SVGを選択</label>
                     <span id="fileName" class="file-name">未選択</span>
                 </div>
             </div>
