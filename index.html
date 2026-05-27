@@ -433,7 +433,7 @@
                 </div>
             </div>
 
-            <button id="shareBtn" class="btn share-btn">共有URLをコピー</button>
+            <button id="shareBtn" class="btn share-btn" style="display:none;">共有URLをコピー</button>
         </aside>
 
         <!-- ===== メインコンテンツ ===== -->
@@ -482,8 +482,7 @@
                 var kanji = raw.charAt(0);
                 input.value = kanji; // フィールドも1文字に絞る
 
-                // SVGモードから漢字モードに戻った場合は共有ボタンを再表示
-                document.getElementById('shareBtn').style.display = '';
+                window._svgMode = false;
                 btn.textContent = '読込中…';
                 btn.disabled = true;
 
@@ -496,6 +495,9 @@
                         btn.textContent = '読み込む';
                         btn.disabled = false;
                         showStatus('loadStatus', '✓ 「' + kanji + '」を読み込みました', 'success');
+                        if (!window._svgMode) {
+                            document.getElementById('shareBtn').style.display = '';
+                        }
                     } else if (checkCount > 40) {
                         clearInterval(timer);
                         btn.textContent = '読み込む';
@@ -510,7 +512,7 @@
                 var file = fileInput.files[0];
                 if (!file) return;
                 fileNameEl.textContent = file.name;
-                document.getElementById('shareBtn').style.display = 'none';
+                window._svgMode = true;
                 showStatus('svgStatus', '読込中…', 'neutral');
 
                 var checkCount = 0;
