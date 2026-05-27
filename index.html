@@ -396,17 +396,20 @@
                 </div>
             </div>
 
-            <!-- SVG（任意） -->
+            <!-- SVG（任意・折りたたみ） -->
             <div class="ctrl-block optional">
-                <div class="step-header">
+                <div class="step-header" onclick="toggleSvg()" style="cursor:pointer; user-select:none;">
                     <div class="step-num optional-num">＋</div>
                     <span class="step-title optional-title">SVGから読み込む（任意）</span>
+                    <span id="svgArrow" style="margin-left:auto; font-size:10px; color:#bbb;">▶</span>
                 </div>
-                <p class="hint">独自のSVGファイルを使う場合はこちら</p>
-                <div class="ctrl-row" style="flex-direction: column; align-items: flex-start;">
-                    <input type="file" id="fileInput" accept=".svg">
-                    <label for="fileInput" class="btn" style="width:100%;">SVGを選択</label>
-                    <span id="fileName" class="file-name">未選択</span>
+                <div id="svgPanel" style="display:none; flex-direction:column; gap:6px;">
+                    <p class="hint">独自のSVGファイルを使う場合はこちら</p>
+                    <div class="ctrl-row" style="flex-direction: column; align-items: flex-start;">
+                        <input type="file" id="fileInput" accept=".svg">
+                        <label for="fileInput" class="btn" style="width:100%;">SVGを選択</label>
+                        <span id="fileName" class="file-name">未選択</span>
+                    </div>
                 </div>
             </div>
 
@@ -448,6 +451,15 @@
         </main>
 
     </div>
+    <script>
+        function toggleSvg() {
+            var panel = document.getElementById('svgPanel');
+            var arrow = document.getElementById('svgArrow');
+            var open = panel.style.display === 'flex';
+            panel.style.display = open ? 'none' : 'flex';
+            arrow.textContent = open ? '▶' : '▼';
+        }
+    </script>
     <script src="script.js"></script>
 </body>
 
