@@ -394,6 +394,7 @@
                     <input type="text" id="kanjiInput" maxlength="1" placeholder="字">
                     <button id="loadKanjiBtn" class="btn primary flex1">読み込む</button>
                 </div>
+                <span id="loadStatus" style="font-size:11px; padding-left:28px; min-height:1.4em; display:block; opacity:0;"></span>
             </div>
 
             <!-- SVG（任意・折りたたみ） -->
@@ -458,6 +459,59 @@
             var open = panel.style.display === 'flex';
             panel.style.display = open ? 'none' : 'flex';
             arrow.textContent = open ? '▶' : '▼';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var input = document.getElementById('kanjiInput');
+            var btn = document.getElementById('loadKanjiBtn');
+
+            // EnterキーでIME確定しても読み込みが走らないようにする
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
+
+            // 「読み込む」ボタンにフィードバック表示を追加
+            btn.addEventListener('click', function () {
+                var kanji = input.value.trim();
+                if (!kanji) return;
+
+                // ローディング表示
+                btn.textContent = '読込中…';
+                btn.disabled = true;
+
+                // canvasにSVGが入ったら成功と判定
+                var checkCount = 0;
+                var timer = setInterval(function () {
+                    checkCount++;
+                    var container = document.getElementById('originalContainer');
+                    if (container && container.querySelector('svg')) {
+                        clearInterval(timer);
+                        btn.textContent = '読み込む';
+                        btn.disabled = false;
+                        showStatus('✓ 「' + kanji + '」を読み込みました', 'success');
+                    } else if (checkCount > 40) {
+                        clearInterval(timer);
+                        btn.textContent = '読み込む';
+                        btn.disabled = false;
+                        showStatus('読み込めませんでした', 'error');
+                    }
+                }, 100);
+            }, true); // capture: true で script.js より先に発火
+        });
+
+        function showStatus(msg, type) {
+            var el = document.getElementById('loadStatus');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.color = type === 'success' ? '#27ae60' : '#e74c3c';
+            el.style.opacity = '1';
+            el.style.transition = 'none';
+            setTimeout(function () {
+                el.style.transition = 'opacity 1s';
+                el.style.opacity = '0';
+            }, 2500);
         }
     </script>
     <script src="script.js"></script>
