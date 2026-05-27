@@ -482,6 +482,8 @@
                 var kanji = raw.charAt(0);
                 input.value = kanji; // フィールドも1文字に絞る
 
+                // SVGモードから漢字モードに戻った場合は共有ボタンを再表示
+                document.getElementById('shareBtn').style.display = '';
                 btn.textContent = '読込中…';
                 btn.disabled = true;
 
@@ -503,11 +505,12 @@
                 }, 100);
             }, true);
 
-            // SVGファイル選択時のフィードバック
+            // SVGファイル選択時のフィードバック＋共有ボタン制御
             fileInput.addEventListener('change', function () {
                 var file = fileInput.files[0];
                 if (!file) return;
                 fileNameEl.textContent = file.name;
+                document.getElementById('shareBtn').style.display = 'none';
                 showStatus('svgStatus', '読込中…', 'neutral');
 
                 var checkCount = 0;
