@@ -483,6 +483,15 @@
                 input.value = kanji; // フィールドも1文字に絞る
 
                 window._svgMode = false;
+                // SVGパネルをリセット・折りたたむ
+                fileInput.value = '';
+                fileNameEl.textContent = '未選択';
+                var svgPanel = document.getElementById('svgPanel');
+                var svgArrow = document.getElementById('svgArrow');
+                svgPanel.style.display = 'none';
+                svgArrow.textContent = '▶';
+                document.getElementById('svgStatus').style.opacity = '0';
+                document.getElementById('shareBtn').style.display = 'none';
                 btn.textContent = '読込中…';
                 btn.disabled = true;
 
