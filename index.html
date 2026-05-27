@@ -702,15 +702,27 @@
 
             // ループ再生：playBtnのdisabled変化を監視
             var loopToggle = document.getElementById('loopToggle');
+            var _userPaused = false;
+
+            // 一時停止ボタンで手動停止フラグを立てる
+            document.getElementById('pauseBtn').addEventListener('click', function () {
+                _userPaused = true;
+            });
+
+            // 再生ボタンで手動停止フラグをリセット
+            document.getElementById('playBtn').addEventListener('click', function () {
+                _userPaused = false;
+            });
+
             var loopObserver = new MutationObserver(function (mutations) {
                 mutations.forEach(function (mutation) {
                     if (mutation.attributeName === 'disabled') {
                         var playBtn = document.getElementById('playBtn');
-                        // 再生終了（disabled=false かつ pauseBtn=disabled）かつループON
                         var pauseBtn = document.getElementById('pauseBtn');
-                        if (!playBtn.disabled && pauseBtn.disabled && loopToggle.checked) {
+                        // 再生終了（playBtn有効・pauseBtn無効）かつループON・手動停止でない
+                        if (!playBtn.disabled && pauseBtn.disabled && loopToggle.checked && !_userPaused) {
                             setTimeout(function () {
-                                if (loopToggle.checked) playBtn.click();
+                                if (loopToggle.checked && !_userPaused) playBtn.click();
                             }, 600);
                         }
                     }
