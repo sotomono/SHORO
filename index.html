@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>効率漢字</title>
+    <title>書路-SHORO-</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -464,36 +464,13 @@
                 color: var(--accent-color);
             }
 
-            /* メインを全幅に・画面高さに収める */
+            /* メインを全幅に */
             .main {
-                padding: 60px 8px 8px;
-                height: 100vh;
+                padding: 60px 16px 16px;
             }
 
             .comparison-view {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                height: 100%;
-            }
-
-            .view-panel {
-                height: 100%;
-            }
-
-            .canvas-container {
-                aspect-ratio: unset;
-                flex: 1;
-                min-height: 0;
-            }
-
-            h2 {
-                font-size: 12px;
-                margin-bottom: 6px;
-            }
-
-            .stats {
-                font-size: 10px;
-                margin-top: 4px;
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -510,7 +487,7 @@
         <!-- ===== サイドバー ===== -->
         <aside class="sidebar">
             <div class="site-title">
-                <h1>効率漢字<span class="site-title-roman">コウリツカンジ</span></h1>
+                <h1>書路<span class="site-title-roman">SHORO</span></h1>
                 <p>最適な書き順を探索する</p>
             </div>
 
@@ -576,13 +553,20 @@
 
         <!-- ===== メインコンテンツ ===== -->
         <main class="main">
-            <div class="comparison-view">
-                <div class="view-panel">
+            <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+                <label class="toggle-label" for="bothToggle">
+                    <input type="checkbox" id="bothToggle" checked>
+                    <span class="toggle-track"></span>
+                    <span style="font-size:13px; color:#666;">元の書き順も表示</span>
+                </label>
+            </div>
+            <div class="comparison-view" id="comparisonView">
+                <div class="view-panel" id="originalPanel">
                     <h2>元の書き順</h2>
                     <div id="originalContainer" class="canvas-container"></div>
                     <div id="originalStats" class="stats"></div>
                 </div>
-                <div class="view-panel">
+                <div class="view-panel" id="shortestPanel">
                     <h2>最短書き順</h2>
                     <div id="shortestContainer" class="canvas-container"></div>
                     <div id="shortestStats" class="stats"></div>
@@ -592,6 +576,22 @@
 
     </div>
     <script>
+        // 共有URLで開いた場合はループON・最短のみ表示
+        (function () {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('kanji')) {
+                document.getElementById('loopToggle').checked = true;
+                document.getElementById('bothToggle').checked = false;
+                document.getElementById('originalPanel').style.display = 'none';
+            }
+        })();
+
+        // 表示モード切替トグル
+        document.getElementById('bothToggle').addEventListener('change', function () {
+            var originalPanel = document.getElementById('originalPanel');
+            originalPanel.style.display = this.checked ? '' : 'none';
+        });
+
         // 共有URLで開いた場合はループ再生をONに
         if (new URLSearchParams(window.location.search).get('kanji')) {
             document.getElementById('loopToggle').checked = true;
