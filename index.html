@@ -348,6 +348,50 @@
             font-weight: bold;
         }
 
+        /* ========== ループトグル ========== */
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .toggle-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-track {
+            width: 32px;
+            height: 18px;
+            background: #ddd;
+            border-radius: 9px;
+            position: relative;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .toggle-label input:checked + .toggle-track {
+            background: var(--primary-btn);
+        }
+
+        .toggle-label input:checked + .toggle-track::after {
+            left: 16px;
+        }
+
         /* ========== ハンバーガーボタン（PC非表示） ========== */
 
         .hamburger {
@@ -495,6 +539,13 @@
                     <button id="pauseBtn" class="btn" disabled>一時停止</button>
                     <button id="resetBtn" class="btn" disabled>最初から</button>
                 </div>
+                <div class="ctrl-row" style="padding-left:28px; gap:8px; margin-top:4px;">
+                    <label class="toggle-label" for="loopToggle">
+                        <input type="checkbox" id="loopToggle">
+                        <span class="toggle-track"></span>
+                        <span style="font-size:12px; color:#666;">ループ再生</span>
+                    </label>
+                </div>
             </div>
 
             <button id="shareBtn" class="btn share-btn" style="display:none;">共有URLをコピー</button>
@@ -518,6 +569,11 @@
 
     </div>
     <script>
+        // 共有URLで開いた場合はループ再生をONに
+        if (new URLSearchParams(window.location.search).get('kanji')) {
+            document.getElementById('loopToggle').checked = true;
+        }
+
         var hamburgerBtn = document.getElementById('hamburgerBtn');
         var sidebar = document.querySelector('.sidebar');
         var overlay = document.getElementById('overlay');
@@ -593,6 +649,24 @@
                     }
                 }, 100);
             }, true);
+
+            // ループ再生：playBtnのdisabled変化を監視
+            var loopToggle = document.getElementById('loopToggle');
+            var loopObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.attributeName === 'disabled') {
+                        var playBtn = document.getElementById('playBtn');
+                        // 再生終了（disabled=false かつ pauseBtn=disabled）かつループON
+                        var pauseBtn = document.getElementById('pauseBtn');
+                        if (!playBtn.disabled && pauseBtn.disabled && loopToggle.checked) {
+                            setTimeout(function () {
+                                if (loopToggle.checked) playBtn.click();
+                            }, 600);
+                        }
+                    }
+                });
+            });
+            loopObserver.observe(document.getElementById('playBtn'), { attributes: true });
 
             // SVGファイル選択時のフィードバック＋共有ボタン制御
             fileInput.addEventListener('change', function () {
