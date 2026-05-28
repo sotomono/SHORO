@@ -82,13 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resetAnimation();
 
+        document.dispatchEvent(new CustomEvent('kanjiLoaded', { detail: { kanji } }));
+
         if (autoPlay) {
             playBtn.click();
         }
 
     } catch (err) {
         console.error(err);
-        alert('SVG取得に失敗しました');
+        document.dispatchEvent(new CustomEvent('kanjiLoadFailed', { detail: { kanji } }));
     }
 }
 
@@ -110,13 +112,13 @@ loadKanjiBtn.addEventListener('click', () => {
             playBtn.disabled = false;
             resetBtn.disabled = false;
 
-            // Initial Draw (Static, full) or Empty?
-            // Let's show the first frame (empty) or reset.
             resetAnimation();
+
+            document.dispatchEvent(new CustomEvent('svgLoaded'));
 
         } catch (err) {
             console.error(err);
-            alert('SVGファイルの読み込みに失敗しました。');
+            document.dispatchEvent(new CustomEvent('svgLoadFailed'));
         }
     });
 
@@ -579,26 +581,5 @@ loadKanjiBtn.addEventListener('click', () => {
         // Clear containers and re-setup DOM
         setupVisualization(originalContainer, originalOrder);
         setupVisualization(shortestContainer, shortestOrder);
-    }
-});
-
-shareBtn.addEventListener('click', async () => {
-
-    const kanji = kanjiInput.value.trim();
-
-    if (!kanji) {
-        alert('漢字を入力してください');
-        return;
-    }
-
-    const shareURL =
-        `${window.location.origin}${window.location.pathname}?kanji=${encodeURIComponent(kanji)}`;
-
-    try {
-        await navigator.clipboard.writeText(shareURL);
-        alert('共有URLをコピーしました');
-    } catch (err) {
-        console.error(err);
-        alert('コピーに失敗しました');
     }
 });
