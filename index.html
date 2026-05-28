@@ -568,7 +568,7 @@
                 </div>
                 <div class="ctrl-row" style="padding-left:28px; gap:8px; margin-top:4px;">
                     <label class="toggle-label" for="bothToggle">
-                        <input type="checkbox" id="bothToggle" checked>
+                        <input type="checkbox" id="bothToggle">
                         <span class="toggle-track"></span>
                         <span style="font-size:12px; color:#666;">元の書き順も表示</span>
                     </label>
@@ -596,6 +596,9 @@
 
     </div>
     <script>
+        // 初期状態：元の書き順を非表示
+        applyDisplayMode(false);
+
         function applyDisplayMode(showBoth) {
             var originalPanel = document.getElementById('originalPanel');
             var comparisonView = document.getElementById('comparisonView');
@@ -678,26 +681,25 @@
                 // ボタンテキストのみ変更（disabledにするとscript.jsが動かなくなるため）
                 btn.textContent = '読込中…';
 
-                // script.js の処理完了をSVG描画で検知
-                var prevSvg = (document.getElementById('originalContainer').querySelector('svg') || {}).outerHTML || '';
-                var checkCount = 0;
-                var timer = setInterval(function () {
-                    checkCount++;
-                    var container = document.getElementById('originalContainer');
-                    var svg = container && container.querySelector('svg');
-                    if (svg && svg.outerHTML !== prevSvg) {
-                        clearInterval(timer);
-                        btn.textContent = '読み込む';
-                        showStatus('loadStatus', '✓ 「' + kanji + '」を読み込みました', 'success');
-                        if (!window._svgMode) {
-                            document.getElementById('shareBtn').style.display = '';
-                        }
-                    } else if (checkCount > 40) {
-                        clearInterval(timer);
-                        btn.textContent = '読み込む';
-                        showStatus('loadStatus', '読み込めませんでした', 'error');
+                function onKanjiLoaded(e) {
+                    document.removeEventListener('kanjiLoaded', onKanjiLoaded);
+                    document.removeEventListener('kanjiLoadFailed', onKanjiFailed);
+                    btn.textContent = '読み込む';
+                    showStatus('loadStatus', '✓ 「' + kanji + '」を読み込みました', 'success');
+                    if (!window._svgMode) {
+                        document.getElementById('shareBtn').style.display = '';
                     }
-                }, 100);
+                }
+
+                function onKanjiFailed() {
+                    document.removeEventListener('kanjiLoaded', onKanjiLoaded);
+                    document.removeEventListener('kanjiLoadFailed', onKanjiFailed);
+                    btn.textContent = '読み込む';
+                    showStatus('loadStatus', '読み込めませんでした', 'error');
+                }
+
+                document.addEventListener('kanjiLoaded', onKanjiLoaded);
+                document.addEventListener('kanjiLoadFailed', onKanjiFailed);
             }, true);
 
             // ループ再生：playBtnのdisabled変化を監視
@@ -741,18 +743,20 @@
                 document.getElementById('shareBtn').style.display = 'none';
                 showStatus('svgStatus', '読込中…', 'neutral');
 
-                var checkCount = 0;
-                var timer = setInterval(function () {
-                    checkCount++;
-                    var container = document.getElementById('originalContainer');
-                    if (container && container.querySelector('svg')) {
-                        clearInterval(timer);
-                        showStatus('svgStatus', '✓ SVGを読み込みました', 'success');
-                    } else if (checkCount > 40) {
-                        clearInterval(timer);
-                        showStatus('svgStatus', '読み込めませんでした', 'error');
-                    }
-                }, 100);
+                function onSvgLoaded() {
+                    document.removeEventListener('svgLoaded', onSvgLoaded);
+                    document.removeEventListener('svgLoadFailed', onSvgFailed);
+                    showStatus('svgStatus', '✓ SVGを読み込みました', 'success');
+                }
+
+                function onSvgFailed() {
+                    document.removeEventListener('svgLoaded', onSvgLoaded);
+                    document.removeEventListener('svgLoadFailed', onSvgFailed);
+                    showStatus('svgStatus', '読み込めませんでした', 'error');
+                }
+
+                document.addEventListener('svgLoaded', onSvgLoaded);
+                document.addEventListener('svgLoadFailed', onSvgFailed);
             });
         });
 
