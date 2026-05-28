@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resetAnimation();
 
-        document.dispatchEvent(new CustomEvent('kanjiLoaded', { detail: { kanji } }));
+        setTimeout(() => document.dispatchEvent(new CustomEvent('kanjiLoaded', { detail: { kanji } })), 0);
 
         if (autoPlay) {
             playBtn.click();
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (err) {
         console.error(err);
-        document.dispatchEvent(new CustomEvent('kanjiLoadFailed', { detail: { kanji } }));
+        setTimeout(() => document.dispatchEvent(new CustomEvent('kanjiLoadFailed', { detail: { kanji } })), 0);
     }
 }
 
@@ -114,11 +114,11 @@ loadKanjiBtn.addEventListener('click', () => {
 
             resetAnimation();
 
-            document.dispatchEvent(new CustomEvent('svgLoaded'));
+            setTimeout(() => document.dispatchEvent(new CustomEvent('svgLoaded')), 0);
 
         } catch (err) {
             console.error(err);
-            document.dispatchEvent(new CustomEvent('svgLoadFailed'));
+            setTimeout(() => document.dispatchEvent(new CustomEvent('svgLoadFailed')), 0);
         }
     });
 
