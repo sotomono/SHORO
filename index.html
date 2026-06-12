@@ -809,6 +809,27 @@
             });
             loopObserver.observe(document.getElementById('playBtn'), { attributes: true });
 
+            // 共有ボタン：SVGモード時はalert、通常時はbothパラメータ付きURLをコピー
+            document.getElementById('shareBtn').addEventListener('click', function () {
+                if (window._svgMode) {
+                    alert('ローカルファイルを元にしたアニメーションは共有できません。');
+                    return;
+                }
+                var kanji = document.getElementById('kanjiInput').value.trim().charAt(0);
+                if (!kanji) {
+                    alert('漢字を入力してください');
+                    return;
+                }
+                var both = document.getElementById('bothToggle').checked ? '1' : '0';
+                var url = window.location.origin + window.location.pathname
+                    + '?kanji=' + encodeURIComponent(kanji) + '&both=' + both;
+                navigator.clipboard.writeText(url).then(function () {
+                    alert('共有URLをコピーしました');
+                }).catch(function () {
+                    alert('コピーに失敗しました');
+                });
+            });
+
             // SVGファイル選択時のフィードバック＋共有ボタン制御
             fileInput.addEventListener('change', function () {
                 var file = fileInput.files[0];
