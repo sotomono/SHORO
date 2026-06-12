@@ -63,6 +63,13 @@
             padding-bottom: 16px;
             margin-bottom: 4px;
             border-bottom: 1px solid var(--border-color);
+            display: block;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .site-title:hover {
+            opacity: 0.7;
         }
 
         .site-title h1 {
@@ -547,10 +554,10 @@
 
         <!-- ===== サイドバー ===== -->
         <aside class="sidebar">
-            <div class="site-title">
+            <a class="site-title" href="https://github.com/sotomono/SHORO" target="_blank" rel="noopener">
                 <h1>書路<span class="site-title-roman">SHORO</span></h1>
                 <p>最適な書き順を探索する</p>
-            </div>
+            </a>
 
             <!-- Step 1: 入力 -->
             <div class="ctrl-block">
@@ -590,7 +597,7 @@
                     <div class="step-num">2</div>
                     <span class="step-title">再生</span>
                 </div>
-                <p class="hint">読み込み後に再生ボタンが有効になります</p>
+                <p class="hint" id="playHint">読み込み後に再生ボタンが有効になります</p>
                 <div class="ctrl-row speed-row">
                     <div class="speed-slider-wrap">
                         <input type="range" id="speedRange" min="0.1" max="3.0" step="0.1" value="1.0">
@@ -766,6 +773,8 @@
                     if (!window._svgMode) {
                         document.getElementById('shareBtn').style.display = '';
                     }
+                    var hint = document.getElementById('playHint');
+                    if (hint) hint.style.display = 'none';
                 }
 
                 function onKanjiFailed() {
@@ -845,6 +854,8 @@
                     document.removeEventListener('svgLoaded', onSvgLoaded);
                     document.removeEventListener('svgLoadFailed', onSvgFailed);
                     showStatus('svgStatus', '✓ SVGを読み込みました', 'success');
+                    var hint = document.getElementById('playHint');
+                    if (hint) hint.style.display = 'none';
                 }
 
                 function onSvgFailed() {
