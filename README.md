@@ -63,4 +63,4 @@ SVGの全 <path> を読み込み、それぞれについて以下を計算しま
 
 作者：sotomono（19歳）
 
-※「書路」は、以前制作した[「漢字最短書き順比較サイト」](https://github.com/sotomono/kanji_shortest-stroke)の改良版として、claudeで制作しました。
+※「書路」は、以前制作した[漢字最短書き順比較サイト](https://github.com/sotomono/kanji_shortest-stroke)の改良版として、claudeで制作しました。
